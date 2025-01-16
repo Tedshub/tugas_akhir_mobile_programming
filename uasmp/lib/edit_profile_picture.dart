@@ -71,9 +71,6 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
     }
 
     try {
-      print('Sending update request for user ID: ${widget.userId}');
-      print('Image URL: $imageUrl');
-
       final success = await apiService.updateProfile(
           widget.userId, imageUrl); // Mengirim permintaan update profil.
 
@@ -94,7 +91,6 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
         });
       }
     } catch (e) {
-      print('Error updating profile: $e');
       setState(() {
         _errorMessage =
             "An error occurred. Please try again."; // Pesan jika terjadi error.
@@ -129,7 +125,6 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Tombol kembali.
                   Align(
                     alignment: Alignment.centerLeft,
                     child: IconButton(
@@ -138,7 +133,6 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
                     ),
                   ),
                   const SizedBox(height: 40),
-                  // Menampilkan gambar profil saat ini.
                   isLoadingProfile
                       ? const CircularProgressIndicator()
                       : CircleAvatar(
@@ -152,7 +146,7 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
                                   ? NetworkImage(userData['profile']
                                           .startsWith('http')
                                       ? userData['profile']
-                                      : 'http://192.168.1.24:5000/${userData['profile']}')
+                                      : '${apiService.baseUrl}/${userData['profile']}')
                                   : null,
                           child: (_imageUrlController.text.isEmpty &&
                                   userData['profile'] == null)
@@ -176,7 +170,6 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
                     ),
                   ),
                   const SizedBox(height: 40),
-                  // Input URL gambar.
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25),
                     child: TextField(
@@ -200,13 +193,11 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
                         ),
                       ),
                       onChanged: (text) {
-                        // Memperbarui pratinjau gambar saat URL berubah.
                         setState(() {});
                       },
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // Menampilkan pesan kesalahan jika ada.
                   if (_errorMessage != null)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -217,7 +208,6 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
                       ),
                     ),
                   const SizedBox(height: 20),
-                  // Tombol simpan.
                   _isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
                       : ElevatedButton(
@@ -231,8 +221,7 @@ class _EditProfilePictureState extends State<EditProfilePicture> {
                               borderRadius: BorderRadius.circular(15),
                             ),
                           ),
-                          onPressed:
-                              saveProfilePicture, // Simpan gambar profil.
+                          onPressed: saveProfilePicture,
                           child: const Text(
                             "Save",
                             style: TextStyle(
